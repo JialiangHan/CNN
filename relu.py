@@ -11,7 +11,7 @@ class Relu:
         self.x = x
         return np.maximum(x, 0)
 
-    def gradient(self, eta):
+    def backward(self, eta):
         self.eta = eta
         self.eta[self.x < 0] = 0
         return self.eta

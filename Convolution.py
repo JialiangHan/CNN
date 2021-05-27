@@ -37,6 +37,7 @@ class Conv2D:
         self.output_shape = self.eta.shape
 
     def forward(self, x):
+        self.col_img=[]
         col_weights = self.weights.reshape([-1, self.output_channels])
         if self.method == 'SAME':
             x = np.pad(x, ((0, 0), (self.ksize / 2, self.ksize / 2), (self.ksize / 2, self.ksize / 2), (0, 0)),
@@ -50,7 +51,7 @@ class Conv2D:
         self.col_img = np.array(self.col_img)
         return conv_out
 
-    def gradient(self, eta):
+    def backward(self, eta):
         # eta is error
         self.eta = eta
         col_eta = np.reshape(eta, [self.batchsize, -1, self.output_channels])
@@ -79,7 +80,7 @@ class Conv2D:
         next_eta = np.reshape(next_eta, self.input_shape)
         return next_eta
 
-    def backward(self, alpha=0.00001, weight_decay=0.0004):
+    def gradient(self, alpha=0.00001, weight_decay=0.0004):
         self.weights *= (1 - weight_decay)
         self.bias *= (1 - weight_decay)
         self.weights = self.weights - alpha * self.w_gradient

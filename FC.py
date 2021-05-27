@@ -18,7 +18,7 @@ class Fully_Connect:
         output = np.dot(self.x, self.weights) + self.bias
         return output
 
-    def gradient(self, eta):
+    def backward(self, eta):
         for i in range(eta.shape[0]):
             col_x = self.x[i][:, np.newaxis]
             eta_i = eta[i][:, np.newaxis].T
@@ -30,7 +30,7 @@ class Fully_Connect:
 
         return next_eta
 
-    def backward(self, alpha=0.00001, weight_decay=0.0004):
+    def gradient(self, alpha=0.00001, weight_decay=0.0004):
         # weight_decay = L2 regularization
         self.weights *= (1 - weight_decay)
         self.bias *= (1 - weight_decay)

@@ -7,10 +7,10 @@ from Softmax import Softmax
 from load_mnist import load_mnist
 from relu import Relu
 
-images, labels = load_mnist('./mnist')
-test_images, test_labels = load_mnist('./mnist', 't10k')
+images, labels = load_mnist('.\\mnist')
+test_images, test_labels = load_mnist('.\\mnist', 't10k')
 
-batch_size = 64
+batch_size = 100
 conv1 = Conv2D([batch_size, 28, 28, 1], 12, 5, 1)
 relu1 = Relu(conv1.output_shape)
 pool1 = Max_pooling(relu1.output_shape)
@@ -23,7 +23,7 @@ sf = Softmax(fc.output_shape)
 for epoch in range(20):
     learning_rate = 1e-4
     # training
-    for i in range(images.shape[0] / batch_size):
+    for i in range(int(images.shape[0] / batch_size)):
         # forward
         img = images[i * batch_size:(i + 1) * batch_size].reshape([batch_size, 28, 28, 1])
         label = labels[i * batch_size:(i + 1) * batch_size]
@@ -46,3 +46,10 @@ for epoch in range(20):
         pool1_back = pool1.backward(conv2_back)
         relu1_back = relu1.backward(pool1_back)
         conv1_back = conv1.backward(relu1_back)
+
+        if i%1 ==0:
+            fc.gradient(alpha=learning_rate,weight_decay=0.0004)
+            conv2.gradient(alpha=learning_rate,weight_decay=0.0004)
+            conv1.gradient(alpha=learning_rate,weight_decay=0.0004)
+
+
